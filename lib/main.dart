@@ -5,8 +5,34 @@ void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // This widget is the root of your application.
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  TextEditingController inputSuhuController = TextEditingController();
+
+  // Dynamic variable
+  double _inputUser = 0;
+  double _kelvin = 0;
+  double _reamur = 0;
+
+  String _stringKelvin = '0.0';
+  String _stringReamur = '0.0';
+
+  void _temperatureConversion() {
+    setState(() {
+      _inputUser = double.parse(inputSuhuController.text);
+      _kelvin = _inputUser + 273;
+      _reamur = _inputUser * (4 / 5);
+
+      _stringKelvin = _kelvin.toStringAsFixed(1);
+      _stringReamur = _reamur.toStringAsFixed(1);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,6 +51,7 @@ class MyApp extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               TextFormField(
+                controller: inputSuhuController,
                 decoration:
                     InputDecoration(hintText: 'Masukkan Suhu Dalam Celcius'),
                 keyboardType: TextInputType.number,
@@ -40,13 +67,16 @@ class MyApp extends StatelessWidget {
                       Container(
                         margin: EdgeInsets.only(bottom: 16),
                         child: Text(
-                          'Suhu dalam Kelvin', 
+                          'Suhu dalam Kelvin',
                           style: TextStyle(
                             fontSize: 16,
                           ),
                         ),
                       ),
-                      Text('150', style: TextStyle(fontSize: 48),),
+                      Text(
+                        '$_stringKelvin',
+                        style: TextStyle(fontSize: 48),
+                      ),
                     ],
                   ),
                   Column(
@@ -54,13 +84,16 @@ class MyApp extends StatelessWidget {
                       Container(
                         margin: EdgeInsets.only(bottom: 16),
                         child: Text(
-                          'Suhu dalam Reamor', 
+                          'Suhu dalam Reamor',
                           style: TextStyle(
                             fontSize: 16,
                           ),
                         ),
                       ),
-                      Text('200', style: TextStyle(fontSize: 48),),
+                      Text(
+                        '$_stringReamur',
+                        style: TextStyle(fontSize: 48),
+                      ),
                     ],
                   ),
                 ],
@@ -68,8 +101,11 @@ class MyApp extends StatelessWidget {
               Container(
                 margin: EdgeInsets.only(bottom: 32),
                 child: ElevatedButton(
-                  onPressed: () {}, 
-                  child: Text('Konversi Suhu', style: TextStyle(fontSize: 16),),
+                  onPressed: _temperatureConversion,
+                  child: Text(
+                    'Konversi Suhu',
+                    style: TextStyle(fontSize: 16),
+                  ),
                   style: ElevatedButton.styleFrom(
                     minimumSize: Size(double.infinity, 50),
                   ),
